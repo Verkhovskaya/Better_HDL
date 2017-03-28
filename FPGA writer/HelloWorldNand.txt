@@ -1,0 +1,40 @@
+#Here's a comment
+
+##
+Here's a multiline
+comment
+##
+
+#Here's an inverter
+DEFINE Inverter inv_input	inv_output  #Use tabs spaces or (a,b) for formatting
+	BUILD !inv_input => inv_output 		# & | ! == != are inbuild.
+
+#As are AND, OR, NAND, NOR, and XNOR, but for the sake of the exercise lets pretend they're not. 
+
+##
+Everything after "BUILD" is, well, built. Literally. The power of FPGAs is that when inv_input changes, inv_output changes within nanoseconds, if not faster. 
+##
+
+DEFINE Nand 		in_1, in2		out #Capitalize block names, lowercase for nodes
+	BUILD
+		Inverter temp_1 temp_2 #Builds an inverter between temp_1 and temp_2
+		in_1 => temp_1 #Connects in_1 to temp_1
+		temp_2 => out_1
+
+		#You can also do this directly with
+		Inverter in_2 out_2
+
+		out <= out_1&out_2	#Paths can be =>, <= or <> for bidirectional.
+							#Note that bidirectional paths are faster, but you 
+							#have to be more careful with them
+END
+
+
+#To actually load this into an {NAME}, use
+
+a <= PortA[0]
+b <= PortA[1]
+c => PortA[2]
+Nand(a,b,c) #This formatting also works
+
+#As far as actually loading this... HAHAHAHAHA!

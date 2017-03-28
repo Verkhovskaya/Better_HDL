@@ -1,0 +1,8 @@
+DEFINE PlusOne inBit inNumber{a}	outNumber{b} ?error		bit_number
+
+BUILD
+	FOR n in (1:bit_number)
+		a[n] XOR carry[n] => out[n]
+		a[n] & carry[n] => carry[n+1]
+	carry[bit_number] => ?error
+	out => outNumber

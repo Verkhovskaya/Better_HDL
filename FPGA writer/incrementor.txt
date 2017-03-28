@@ -1,0 +1,14 @@
+DEFINE	Incrementor		inBit{a},Clear{b},clock{c} 		out{d}
+
+	Incrementor 	inBit,inNumber,clock	outNumber		4
+	SetReset		set,reset,clock			output			4
+	Buffer			buffer1in				buffer1out		10
+	buffer 			buffer2in				buffer2out		10
+
+	NOT clear => keep_going =>
+
+	calc[0]*keep_going => save[0]
+	calc[1]*keep_going => save[1]
+	calc[2]*keep_going => save[2]
+	calc[3]*keep_going => save[3]
+	

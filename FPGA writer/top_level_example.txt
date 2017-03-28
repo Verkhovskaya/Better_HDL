@@ -1,0 +1,66 @@
+##
+NOTE: All signals are, by default, a bit {1}. To make it different, put a number of bits after the number is curly brackets. For example, DEFINE Increment one{5}
+##
+
+
+INCLUDE math.lib
+
+usb => PORT E[0]
+img1 <= PORTA[0:7]
+img2 <= PORTB[0:7]
+img3a <= PORTC[0:3]
+img3b <= PORTD[0:3]
+
+
+
+BUILD:
+	USB 				(none)				usb
+	proj/IMAGELOADER	(img1),x1,y1 		pix1	480,320
+	proj/IMAGELOADER 	(img2),x2,y2 		pix2	480,320
+	proj/IMAGELOADER 	(img3,img3b),x3,y3 	pix3	480,320
+
+	proj/trig_clock		(none)		clock
+
+	proj/trig_clock 	trig1		x_index		0,319,100*480*320/1000000000
+	proj/trig_clock		trig2		y_index		0,479,100*480/1000000000
+
+	trig => trig1,trig2
+	x_index => x1,x2,x3
+	y_index => y1,y2,y3
+
+	(pix1[0]>40)&(pix1[0]<60) => cam1
+	(pix2[0]>40)&(pix2[0]<60) => cam2
+	(pix3[0]>40)&(pix3[0]<60) => cam3
+
+	math/adder 	add1xclk, add1xin		add1xout		0,1,add1xtrig
+	math/adder 	add1yclk, add1yin		add1yout		0,1,add1ytrig
+	math/adder 	add2xclk, add2xin		add2xout		0,1,add2xtrig
+	math/adder 	add2yclk, add2yin		add2yout		0,1,add2ytrig
+	math/adder 	add3xclk, add3xin		add3xout		0,1,add3xtrig
+	math/adder 	add2yclk, add2yin		add2yout		0,1,add2ytrig
+
+	trig => add1trig, add2trig, add3trig
+	clock => add1clk, add2clk, add3clk
+
+	cam1 * x_index => add1xin
+	cam1 * y_index => add1yin
+
+	cam2 * x_index => add2xin
+	cam2 * y_index => add2yin
+
+	cam3 * x_index => add3xin
+	cam3 * y_index => add3yin
+
+	(index == 0) => calc_ended
+
+	add1xout/480*320 => blah
+	add1yout/480*320 => blah
+	add1xin/480*320 => blah
+	add1xin/480*320 => blah
+	add1xin/480*320 => blah
+
+	proj/buffer		buffer30_in		buffer30_out		30
+
+	calc_ended => buffer30_in
+
+	calc_ended * 

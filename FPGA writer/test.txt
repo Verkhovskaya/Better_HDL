@@ -1,0 +1,12 @@
+ a v		c
+Oh #dear
+b
+
+###
+Multiline comment
+###
+
+Moar
+BUILD
+DEFINE
+BUILD
